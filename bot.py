@@ -18,7 +18,7 @@ from telegram.ext import (
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 REGISTER_URL = "https://pocketoption.com/en/register/"
-SUPPORT_URL = "https://t.me/tayoacadmy1"
+SUPPORT_URL = "https://t.me/tayoacademy1"
 
 PORT = int(os.getenv("PORT", "10000"))
 RENDER_URL = os.getenv("RENDER_EXTERNAL_URL")
