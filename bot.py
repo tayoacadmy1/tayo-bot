@@ -9,25 +9,16 @@ from telegram.ext import (
     filters,
 )
 
-# =========================
-# SETTINGS
-# =========================
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Halkan dambe waxaan gelin doonaa Pocket Option referral link-gaaga
 REGISTER_URL = "https://pocketoption.com/en/register/"
-
-# Support-kaaga Telegram
 SUPPORT_URL = "https://t.me/tayoacadmy1"
 
+PORT = int(os.getenv("PORT", "10000"))
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
-# =========================
-# START
-# =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     keyboard = [
         [
             InlineKeyboardButton(
@@ -49,8 +40,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
     ]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
     message = (
         "🤖 *WELCOME TO TAYO*\n\n"
         "What I can do:\n\n"
@@ -62,17 +51,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         message,
-        reply_markup=reply_markup,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode="Markdown"
     )
 
 
-# =========================
-# I'VE REGISTERED
-# =========================
-
 async def registered(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
@@ -87,12 +71,7 @@ async def registered(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# =========================
-# RECEIVE PO ID
-# =========================
-
 async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     if not context.user_data.get("waiting_for_id"):
         return
 
@@ -111,24 +90,28 @@ async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# =========================
-# MAIN
-# =========================
+async def health(update, context):
+    return
+
 
 def main():
-
     if not BOT_TOKEN:
         raise ValueError("BOT_TOKEN is not set.")
+
+    if not WEBHOOK_URL:
+        raise ValueError("WEBHOOK_URL is not set.")
 
     app = Application.builder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+
     app.add_handler(
         CallbackQueryHandler(
             registered,
             pattern="^registered$"
         )
     )
+
     app.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
@@ -136,9 +119,14 @@ def main():
         )
     )
 
-    print("Tayo Bot is running...")
+    print("Tayo Bot is starting...")
 
-    app.run_polling()
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        webhook_url=WEBHOOK_URL,
+        drop_pending_updates=True
+    )
 
 
 if __name__ == "__main__":
