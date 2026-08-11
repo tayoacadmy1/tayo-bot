@@ -1,4 +1,5 @@
 import os
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application,
@@ -9,16 +10,26 @@ from telegram.ext import (
     filters,
 )
 
+
+# =========================
+# SETTINGS
+# =========================
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 REGISTER_URL = "https://pocketoption.com/en/register/"
 SUPPORT_URL = "https://t.me/tayoacadmy1"
 
 PORT = int(os.getenv("PORT", "10000"))
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+RENDER_URL = os.getenv("RENDER_EXTERNAL_URL")
 
+
+# =========================
+# START
+# =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     keyboard = [
         [
             InlineKeyboardButton(
@@ -56,7 +67,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+# =========================
+# I'VE REGISTERED
+# =========================
+
 async def registered(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     query = update.callback_query
     await query.answer()
 
@@ -71,7 +87,12 @@ async def registered(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+# =========================
+# RECEIVE PO ID
+# =========================
+
 async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     if not context.user_data.get("waiting_for_id"):
         return
 
@@ -84,47 +105,58 @@ async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔎 *Pocket Option ID received.*\n\n"
         f"🆔 ID: `{po_id}`\n\n"
         "⏳ Your registration is being checked.\n\n"
-        "⚠️ Verification will only be confirmed when an official "
-        "verification method is available.",
+        "⚠️ Registration will only be confirmed "
+        "after official verification.",
         parse_mode="Markdown"
     )
 
 
-async def health(update, context):
-    return
-
+# =========================
+# MAIN
+# =========================
 
 def main():
+
     if not BOT_TOKEN:
-        raise ValueError("BOT_TOKEN is not set.")
+        raise ValueError("BOT_TOKEN is missing.")
 
-    if not WEBHOOK_URL:
-        raise ValueError("WEBHOOK_URL is not set.")
+    if not RENDER_URL:
+        raise ValueError("RENDER_EXTERNAL_URL is missing.")
 
-    app = Application.builder().token(BOT_TOKEN).build()
+    application = (
+        Application.builder()
+        .token(BOT_TOKEN)
+        .build()
+    )
 
-    app.add_handler(CommandHandler("start", start))
+    application.add_handler(
+        CommandHandler("start", start)
+    )
 
-    app.add_handler(
+    application.add_handler(
         CallbackQueryHandler(
             registered,
             pattern="^registered$"
         )
     )
 
-    app.add_handler(
+    application.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
             receive_id
         )
     )
 
-    print("Tayo Bot is starting...")
+    webhook_url = f"{RENDER_URL}/telegram"
 
-    app.run_webhook(
+    print("Tayo Bot starting...")
+    print(f"Webhook: {webhook_url}")
+
+    application.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        webhook_url=WEBHOOK_URL,
+        url_path="telegram",
+        webhook_url=webhook_url,
         drop_pending_updates=True
     )
 
