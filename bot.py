@@ -17,7 +17,7 @@ from telegram.ext import (
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-REGISTER_URL = "REGISTER_URL = "https://shorturl.at/gV00d"
+REGISTER_URL = "https://shorturl.at/gV00d"
 SUPPORT_URL = "https://t.me/tayoacademy1"
 
 PORT = int(os.getenv("PORT", "10000"))
