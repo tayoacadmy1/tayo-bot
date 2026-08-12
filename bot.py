@@ -3,10 +3,10 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application,
-    CommandHandler,
     CallbackQueryHandler,
-    MessageHandler,
+    CommandHandler,
     ContextTypes,
+    MessageHandler,
     filters,
 )
 
@@ -28,36 +28,41 @@ RENDER_URL = os.getenv("RENDER_EXTERNAL_URL")
 # START
 # =========================
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
 
     keyboard = [
         [
             InlineKeyboardButton(
-                "🚀 Register on PO",
+                "🚀 Iska diiwaangeli Pocket Option",
                 url=REGISTER_URL
             )
         ],
         [
             InlineKeyboardButton(
-                "✅ I've Registered",
+                "✅ Waan is diiwaangeliyey",
                 callback_data="registered"
             )
         ],
         [
             InlineKeyboardButton(
-                "💬 Support ↗️",
+                "💬 Taageero",
                 url=SUPPORT_URL
             )
         ],
     ]
-message = (
-    "🤖 *KU SOO DHAWOOW TAYO*\n\n"
-    "Waxaan kuu qaban karaa:\n\n"
-    "📊 Macluumaadka Trading-ka\n"
-    "🎮 Habka Demo-ga\n"
-    "📚 Casharro iyo Waxbarasho\n\n"
-    "Si aad u bilowdo, samee akoonkaaga Pocket Option 👇"
-)
+
+    message = (
+        "🤖 *KU SOO DHAWOW TAYO*\n\n"
+        "Waxaan kuu qaban karaa:\n\n"
+        "📊 Macluumaadka Trading-ka\n"
+        "🎮 Habka Demo-ga\n"
+        "📚 Casharro iyo Waxbarasho\n\n"
+        "Si aad u bilowdo, samee akoonkaaga Pocket Option 👇"
+    )
+
     await update.message.reply_text(
         message,
         reply_markup=InlineKeyboardMarkup(keyboard),
@@ -69,42 +74,55 @@ message = (
 # I'VE REGISTERED
 # =========================
 
-async def registered(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def registered(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
 
     query = update.callback_query
     await query.answer()
 
-    context.user_data["waiting_for_id"] = True
-
     await query.message.reply_text(
-        "✅ *I've Registered*\n\n"
-        "Please enter your Pocket Option ID 👇\n\n"
-        "Example:\n"
+        "✅ *Waan helnay.*\n\n"
+        "Fadlan geli Pocket Option ID-gaaga 👇\n\n"
+        "Tusaale:\n"
         "`12345678`",
         parse_mode="Markdown"
     )
 
+    context.user_data["waiting_for_id"] = True
+
 
 # =========================
-# RECEIVE PO ID
+# RECEIVE POCKET OPTION ID
 # =========================
 
-async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def receive_id(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
 
     if not context.user_data.get("waiting_for_id"):
         return
 
-    po_id = update.message.text.strip()
+    user_id = update.message.text.strip()
+
+    if not user_id.isdigit():
+        await update.message.reply_text(
+            "⚠️ Fadlan geli Pocket Option ID sax ah.\n\n"
+            "Tusaale: `12345678`",
+            parse_mode="Markdown"
+        )
+        return
 
     context.user_data["waiting_for_id"] = False
-    context.user_data["po_id"] = po_id
 
     await update.message.reply_text(
-        "🔎 *Pocket Option ID received.*\n\n"
-        f"🆔 ID: `{po_id}`\n\n"
-        "⏳ Your registration is being checked.\n\n"
-        "⚠️ Registration will only be confirmed "
-        "after official verification.",
+        "🔎 *Pocket Option ID waa la helay.*\n\n"
+        f"🆔 ID: `{user_id}`\n\n"
+        "⏳ Diiwaangelintaada waa la hubinayaa.\n\n"
+        "⚠️ Xaqiijinta waxaa la sameyn doonaa kadib "
+        "hubin rasmi ah.",
         parse_mode="Markdown"
     )
 
@@ -116,10 +134,7 @@ async def receive_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
 
     if not BOT_TOKEN:
-        raise ValueError("BOT_TOKEN is missing.")
-
-    if not RENDER_URL:
-        raise ValueError("RENDER_EXTERNAL_URL is missing.")
+        raise ValueError("BOT_TOKEN lama helin.")
 
     application = (
         Application.builder()
@@ -145,10 +160,12 @@ def main():
         )
     )
 
-    webhook_url = f"{RENDER_URL}/telegram"
+    if not RENDER_URL:
+        raise ValueError(
+            "RENDER_EXTERNAL_URL lama helin."
+        )
 
-    print("Tayo Bot starting...")
-    print(f"Webhook: {webhook_url}")
+    webhook_url = f"{RENDER_URL}/telegram"
 
     application.run_webhook(
         listen="0.0.0.0",
