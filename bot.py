@@ -52,12 +52,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     message = (
-        "🤖 *WELCOME TO TAYO*\n\n"
-        "What I can do:\n\n"
-        "📊 Trading Information\n"
-        "🎮 Demo Mode\n"
-        "📚 Educational Content\n\n"
-        "To get started, create your Pocket Option account 👇"
+       message = (
+    "🤖 *KU SOO DHAWOOW TAYO*\n\n"
+    "Waxaan kuu qaban karaa:\n\n"
+    "📊 Macluumaadka Trading-ka\n"
+    "🎮 Habka Demo-ga\n"
+    "📚 Casharro iyo Waxbarasho\n\n"
+    "Si aad u bilowdo, samee akoonkaaga Pocket Option 👇"
+)
     )
 
     await update.message.reply_text(
