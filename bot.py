@@ -50,8 +50,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         ],
     ]
-
-    message = (
        message = (
     "🤖 *KU SOO DHAWOOW TAYO*\n\n"
     "Waxaan kuu qaban karaa:\n\n"
@@ -60,7 +58,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     "📚 Casharro iyo Waxbarasho\n\n"
     "Si aad u bilowdo, samee akoonkaaga Pocket Option 👇"
 )
-    )
 
     await update.message.reply_text(
         message,
