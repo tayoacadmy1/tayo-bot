@@ -251,12 +251,15 @@ async def error_handler(
 # MAIN
 # ==============================
 
+# =========================
+# MAIN
+# =========================
+
 def main():
 
     if not BOT_TOKEN:
         raise ValueError(
-            "BOT_TOKEN lama helin. "
-            "Fadlan ku dar BOT_TOKEN gudaha Render Environment Variables."
+            "BOT_TOKEN lama helin. Fadlan ka hubi Render Environment Variables."
         )
 
     application = (
@@ -265,30 +268,59 @@ def main():
         .build()
     )
 
-    # /start
+    # =========================
+    # START COMMAND
+    # =========================
+
     application.add_handler(
         CommandHandler("start", start)
     )
 
-    # Buttons
+    # =========================
+    # BUTTONS
+    # =========================
+
     application.add_handler(
         CallbackQueryHandler(button_handler)
     )
 
-    # Errors
+    # =========================
+    # ERROR HANDLER
+    # =========================
+
     application.add_error_handler(error_handler)
 
-    print("🤖 TAYO TRADING BOT waa shaqaynayaa...")
+    # =========================
+    # RENDER WEBHOOK
+    # =========================
 
-    # Polling - webhook looma baahna
-    application.run_polling(
+    port = int(os.getenv("PORT", "10000"))
+    render_url = os.getenv("RENDER_EXTERNAL_URL")
+
+    if not render_url:
+        raise ValueError(
+            "RENDER_EXTERNAL_URL lama helin. "
+            "Hubi Render Environment Variables."
+        )
+
+    webhook_url = f"{render_url}/telegram"
+
+    print("🤖 TAYO TRADING BOT waa bilaabanayaa...")
+    print(f"🌐 Webhook URL: {webhook_url}")
+    print(f"🔌 Port: {port}")
+
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=port,
+        url_path="telegram",
+        webhook_url=webhook_url,
         drop_pending_updates=True
     )
 
 
-# ==============================
+# =========================
 # RUN
-# ==============================
+# =========================
 
 if __name__ == "__main__":
     main()
