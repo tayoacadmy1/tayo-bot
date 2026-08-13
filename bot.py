@@ -48,26 +48,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Dooro qaybta aad rabto 👇"
     )
 
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                "📊 Macluumaadka Trading-ka",
-                callback_data="trading_info"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                "🎮 Habka Demo-ga",
-                callback_data="demo"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                "📢 Booqo Channel-ka",
-                url=CHANNEL_URL
-            )
-        ],
-    ]
+keyboard = [
+    [
+        InlineKeyboardButton(
+            "🚀 Iska Diiwaangeli Pocket Option",
+            url="https://shorturl.at/gV00d"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "📢 Booqo Channel-ka",
+            url="https://t.me/TokenFursadahaOnlineka"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "💬 Taageero",
+            url=SUPPORT_URL
+        )
+    ],
+]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
