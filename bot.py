@@ -69,7 +69,7 @@ keyboard = [
     ],
 ]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
+reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
         welcome_text,
