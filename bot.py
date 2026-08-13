@@ -33,26 +33,38 @@ async def start(
     context: ContextTypes.DEFAULT_TYPE
 ):
 
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                "🚀 Iska diiwaangeli Pocket Option",
-                url=REGISTER_URL
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                "✅ Waan is diiwaangeliyey",
-                callback_data="registered"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                "💬 Taageero",
-                url=SUPPORT_URL
-            )
-        ],
-    ]
+keyboard = [
+    [
+        InlineKeyboardButton(
+            "📊 Macluumaadka Trading-ka",
+            callback_data="trading_info"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "🎮 Habka Demo-ga",
+            callback_data="demo"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "📚 Casharro iyo Waxbarasho",
+            callback_data="lessons"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "📢 Booqo Channel-ka",
+            url="https://t.me/TokenFursadahaOnlineka"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            "💬 Taageero ↗️",
+            url=SUPPORT_URL
+        )
+    ],
+]
 
     message = (
         "🤖 *KU SOO DHAWOW TAYO*\n\n"
